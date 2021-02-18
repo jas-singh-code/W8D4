@@ -87,6 +87,9 @@ Board.prototype.isMine = function (pos, color) {
  * Checks if a given position has a piece on it.
  */
 Board.prototype.isOccupied = function (pos) {
+  if (this.getPiece(pos) === undefined) {
+    return false;
+  }else { return true; }
 };
 
 /**
@@ -101,8 +104,33 @@ Board.prototype.isOccupied = function (pos) {
  * Returns empty array if it hits an empty position.
  *
  * Returns empty array if no pieces of the opposite color are found.
+ * Board.DIRS = [
+  right[ 0,  1],   down-right[ 1,  1],    down[ 1,  0],
+  down-left[ 1, -1],    left[ 0, -1],   up-left[-1, -1],
+  up[-1,  0],     up-right[-1,  1]
+];
  */
 Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
+  let x = pos[0];
+  let y = pos[1];
+  let newX = x + dir[0];
+  let newY = y + dir[1];
+  let peicesArray= piecesToFlip || [];
+
+  if (!this.isValidPos([newX, newY])) {
+    return [];
+  }
+  
+  if (this.isOccupied([newX, newY]) && this.getPiece([newX, newY]).oppColor() == color) {
+    peicesArray.push([newX, newY]);
+    return this._positionsToFlip([newX, newY], color, dir, peicesArray);
+
+  } else if ((this.isOccupied([newX, newY]) && this.getPiece([newX, newY]).color == color)) 
+  {return peicesArray;}
+
+  else {
+    return [];}
+
 };
 
 /**
@@ -111,6 +139,16 @@ Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
  * color being flipped.
  */
 Board.prototype.validMove = function (pos, color) {
+  if (this.isOccupied(pos)) {
+    return false;
+  } 
+  
+  for(let i = 0; i < Board.DIRS.length; i++) {
+    if (this._positionsToFlip(pos, color, Board.DIRS[i], piecesToFlip) !== []) {
+      return true;
+    }
+  }
+  return false;
 };
 
 /**
