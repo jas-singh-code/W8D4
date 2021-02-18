@@ -1,1 +1,19 @@
 /* PHASE 0: Sidebar */
+.profile-picture {
+    display: block;
+    border: 2px solid black;
+    border-radius: 10px;
+    position: relative;
+    margin-top: -120px;
+}
+
+.profile-info h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+
+/* content-sidebar {
+    display
+} */
